@@ -1,0 +1,10 @@
+For example:
+given an
+<question>
+"Statement 1 | A ring homomorphism is one to one if and only if the kernel is {0}. Statement 2 | Q is an ideal in R."
+</question>
+There is 10
+<choices>
+["True, False", "Not Given, Not Given", "False, False", "Not Given, True", "True, Not Given", "Not Given, False", "True, True", "False, True", "False, Not Given"]
+</choices>
+The answer is H

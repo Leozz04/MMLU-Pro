@@ -1,5 +1,5 @@
 #!/bin/bash
-
+export DEEPSEEK_API_KEY="sk-009fb16aaa58425c847934145431ce3c"
 # File to store process IDs
 PID_FILE="process_ids.txt"
 
@@ -7,7 +7,7 @@ PID_FILE="process_ids.txt"
 > $PID_FILE
 
 # List of topics
-topics=("biology" "computer science" "health" "math" "physics" "business" "economics" "history" "other" "psychology" "chemistry" "engineering" "law" "philosophy")
+topics=("math")
 
 # Loop through each topic and run the command in the background
 for topic in "${topics[@]}"; do

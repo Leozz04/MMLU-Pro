@@ -9,15 +9,16 @@ from tqdm import tqdm
 from openai import OpenAI
 from datasets import load_dataset
 
-
-
 API_KEY = os.environ.get("DEEPSEEK_API_KEY")
 client = OpenAI(api_key=API_KEY, base_url="https://api.deepseek.com/")
 
+
 def get_completion(prompt: str):
     start = time.time()
-    system_prompt = "You are an knowledge expert, you are supposed to answer the multi-choice question to derive your final answer as `The answer is ...`."
-    message_text=[{"role": "system", "content": system_prompt}, {"role": "user", "content": prompt}]
+    system_prompt = "You are an knowledgable expert, you are supposed to answer the multi-choice question to derive your final answer as `The answer is ...`. "
+    with open(f"./Prompt/Math_5_shot_cot.txt") as f:
+        ini_prompt = f.read()
+    message_text = [{"role": "system", "content": system_prompt+ini_prompt}, {"role": "user", "content": prompt}]
     completion = client.chat.completions.create(
         model="deepseek-chat",
         messages=message_text,
@@ -142,15 +143,15 @@ def update_result(output_res_path):
     return res, category_record
 
 
-def evaluate(subjects):
+def evaluate(subjects, alter):
     test_df, dev_df = load_mmlu_pro()
     if not subjects:
         subjects = list(test_df.keys())
     print("assigned subjects", subjects)
     for subject in subjects:
         test_data = test_df[subject]
-        output_res_path = os.path.join(output_dir, subject + "_result.json")
-        output_summary_path = os.path.join(output_dir, subject + "_summary.json")
+        output_res_path = os.path.join(output_dir, subject + f"_{alter}" + "_result.json")
+        output_summary_path = os.path.join(output_dir, subject + f"_{alter}" + "_summary.json")
         res, category_record = update_result(output_res_path)
 
         for each in tqdm(test_data):
@@ -212,11 +213,12 @@ def save_summary(category_record, output_summary_path):
 
 if __name__ == '__main__':
     import argparse
+
     parser = argparse.ArgumentParser()
     parser.add_argument("--category", type=str, default="all")
+    parser.add_argument("--setting", type=str, default="zero_shot")
     args = parser.parse_args()
-
     assigned_subject = [args.category] if args.category != "all" else []
     output_dir = "eval_results/deepseek/"
     os.makedirs(output_dir, exist_ok=True)
-    evaluate(assigned_subject)
+    evaluate(assigned_subject, "5-shot")

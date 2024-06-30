@@ -6,6 +6,7 @@ import random
 from tqdm import tqdm
 import time
 from datasets import load_dataset
+from together import Together
 
 API_KEY = 'API_KEY'
 
@@ -15,6 +16,13 @@ my_client = AzureOpenAI(
   api_version="API_VERSION"
 )
 
+client = Together(api_key=os.environ.get("TOGETHER_API_KEY"))
+
+response = client.chat.completions.create(
+    model="meta-llama/Llama-3-8b-chat-hf",
+    messages=[{"role": "user", "content": "What are some fun things to do in New York"}],
+)
+print(response.choices[0].message.content)
 
 def call_gpt_4(client, instruction, inputs):
     start = time.time()
